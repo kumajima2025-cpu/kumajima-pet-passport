@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KumaJima Pet Passport</title>
+<style>
+:root{
+  --brown:#4c3528;
+  --brown2:#715240;
+  --cream:#f4eadc;
+  --paper:#fffaf2;
+  --line:#ddcdbb;
+  --muted:#8c7b70;
+  --green:#5f765c;
+  --orange:#bb7952;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:var(--cream);color:var(--brown)}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:var(--brown);color:#fff;padding:28px 18px}
+.logo{font-size:23px;font-weight:900;margin-bottom:28px}
+.logo small{display:block;font-size:12px;font-weight:500;opacity:.75;margin-top:4px}
+.nav button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#fff;padding:13px 14px;border-radius:12px;font-size:15px;margin:5px 0;cursor:pointer}
+.nav button.active,.nav button:hover{background:rgba(255,255,255,.14)}
+.main{padding:28px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+.search{flex:1;max-width:520px}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:15px}
+button.primary{border:0;background:var(--brown);color:white;padding:12px 18px;border-radius:13px;font-weight:800;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 10px 26px rgba(76,53,40,.08)}
+.stat{font-size:30px;font-weight:900}
+.muted{color:var(--muted)}
+.pet-card{cursor:pointer;transition:.15s}
+.pet-card:hover{transform:translateY(-2px)}
+.avatar{width:58px;height:58px;border-radius:50%;background:#ead8c5;display:flex;align-items:center;justify-content:center;font-size:28px}
+.pet-head{display:flex;gap:13px;align-items:center}
+.tag{display:inline-block;background:#efe2d3;padding:5px 9px;border-radius:999px;font-size:12px;margin:3px 3px 0 0}
+.section{display:none}
+.section.active{display:block}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+.timeline .item{padding:16px 0;border-bottom:1px dashed var(--line)}
+.timeline .item:last-child{border:0}
+.row{display:flex;justify-content:space-between;gap:16px;margin:9px 0}
+.row span:first-child{color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+label{font-size:13px;font-weight:800;display:block;margin:8px 0 6px}
+.hero{text-align:center;padding:28px}
+.hero h1{font-size:36px;margin:8px 0}
+.note{background:#efe3d6;border-radius:14px;padding:14px;margin-top:12px}
+.back{border:0;background:transparent;color:var(--brown);font-weight:800;cursor:pointer;padding:0;margin-bottom:14px}
+@media(max-width:800px){
+ .app{grid-template-columns:1fr}
+ .sidebar{padding:16px;position:sticky;top:0;z-index:10}
+ .logo{margin-bottom:10px}
+ .nav{display:flex;overflow:auto}
+ .nav button{white-space:nowrap}
+ .main{padding:18px}
+ .grid,.two,.form-grid{grid-template-columns:1fr}
+ .form-grid .full{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">KumaJima <small>Pet Passport</small></div>
+    <div class="nav">
+      <button class="active" onclick="showSection('dashboard',this)">首頁</button>
+      <button onclick="showSection('pets',this)">寵物</button>
+      <button onclick="showSection('record',this)">新增美容</button>
+      <button onclick="showSection('passport',this)">主人頁預覽</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <section id="dashboard" class="section active">
+      <div class="topbar">
+        <div>
+          <h1>今天，熊嶼</h1>
+          <div class="muted">快速掌握今天的工作與毛孩狀態</div>
+        </div>
+        <button class="primary" onclick="showSection('record')">＋ 新增美容紀錄</button>
+      </div>
+      <div class="grid">
+        <div class="card"><div class="muted">今日預約</div><div class="stat">6</div></div>
+        <div class="card"><div class="muted">今日完成</div><div class="stat">4</div></div>
+        <div class="card"><div class="muted">今日營收</div><div class="stat">$8,500</div></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h2>快速搜尋</h2>
+        <input placeholder="輸入狗狗名字、主人或電話">
+      </div>
+    </section>
+
+    <section id="pets" class="section">
+      <div class="topbar">
+        <div><h1>寵物</h1><div class="muted">目前共 3 位毛孩</div></div>
+        <button class="primary">＋ 新增寵物</button>
+      </div>
+      <div class="grid">
+        <div class="card pet-card" onclick="openPet('Lisa')">
+          <div class="pet-head"><div class="avatar">🐶</div><div><h3>Lisa</h3><div class="muted">比熊｜芮寧</div></div></div>
+          <div style="margin-top:14px"><span class="tag">上次 3mm</span><span class="tag">草本泥</span></div>
+        </div>
+        <div class="card pet-card" onclick="openPet('MiuMiu')">
+          <div class="pet-head"><div class="avatar">🐩</div><div><h3>MiuMiu</h3><div class="muted">貴賓｜王小姐</div></div></div>
+          <div style="margin-top:14px"><span class="tag">上次美容</span><span class="tag">奈米浴</span></div>
+        </div>
+        <div class="card pet-card" onclick="openPet('Coco')">
+          <div class="pet-head"><div class="avatar">🐕</div><div><h3>Coco</h3><div class="muted">博美｜陳小姐</div></div></div>
+          <div style="margin-top:14px"><span class="tag">上次洗澡</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="petDetail" class="section">
+      <button class="back" onclick="showSection('pets')">← 返回寵物列表</button>
+      <div class="two">
+        <div>
+          <div class="card hero">
+            <div class="avatar" style="margin:auto;width:90px;height:90px;font-size:44px">🐶</div>
+            <h1 id="petName">Lisa</h1>
+            <div><span class="tag">比熊</span><span class="tag">母</span><span class="tag">7 kg</span></div>
+            <p class="muted">主人：芮寧</p>
+          </div>
+          <div class="card" style="margin-top:16px">
+            <h2>重點資訊</h2>
+            <div class="row"><span>目前儲值</span><b>$27,400</b></div>
+            <div class="row"><span>距離上次美容</span><b>31 天</b></div>
+            <div class="row"><span>固定造型</span><b>身體 3mm、腳柱、耳罩</b></div>
+            <div class="note"><b>美容注意事項</b><br>屁股容易紅、耳毛較多、吹腳會緊張。</div>
+          </div>
+        </div>
+        <div class="card timeline">
+          <h2>美容歷史</h2>
+          <div class="item">
+            <b>2026/07/18｜美容</b>
+            <div class="muted">身體 3mm、腳柱、耳罩｜草本泥</div>
+          </div>
+          <div class="item">
+            <b>2026/06/20｜洗澡</b>
+            <div class="muted">奈米浴｜美容表現穩定</div>
+          </div>
+          <div class="item">
+            <b>2026/05/15｜美容</b>
+            <div class="muted">身體 6mm、腳柱</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="record" class="section">
+      <div class="topbar"><div><h1>新增美容紀錄</h1><div class="muted">目標：30 秒完成</div></div></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="full"><label>選擇寵物</label><select><option>Lisa｜比熊｜芮寧</option><option>MiuMiu｜貴賓｜王小姐</option></select></div>
+          <div><label>美容日期</label><input type="date" value="2026-07-18"></div>
+          <div><label>美容師</label><select><option>芮寧</option></select></div>
+          <div><label>服務類型</label><select><option>美容</option><option>洗澡</option></select></div>
+          <div><label>SPA</label><select><option>無</option><option>草本泥</option><option>奈米浴</option><option>碳酸浴</option><option>海鹽浴</option></select></div>
+          <div class="full"><label>造型／長度</label><input value="身體3mm、腳柱、耳罩、尾巴圓"></div>
+          <div><label>本次費用</label><input type="number" value="3500"></div>
+          <div><label>儲值扣款</label><input type="number" value="3500"></div>
+          <div><label>美容表現</label><select><option>穩定乖巧</option><option>稍微緊張</option><option>需要兩人保定</option></select></div>
+          <div><label>吃零食</label><select><option>有</option><option>沒有</option></select></div>
+          <div><label>皮膚狀況</label><input value="屁股微紅"></div>
+          <div><label>耳朵狀況</label><input value="耳垢較多"></div>
+          <div class="full"><label>美容師提醒</label><textarea>回家後請保持屁股周圍乾燥，若持續泛紅建議就醫。</textarea></div>
+        </div>
+        <button class="primary" style="width:100%;margin-top:18px">儲存美容紀錄</button>
+      </div>
+    </section>
+
+    <section id="passport" class="section">
+      <div class="card hero">
+        <div class="avatar" style="margin:auto;width:100px;height:100px;font-size:50px">🐶</div>
+        <h1>Lisa</h1>
+        <div class="muted">熊嶼 Pet Passport</div>
+        <div style="margin-top:12px"><span class="tag">比熊</span><span class="tag">5歲</span><span class="tag">7 kg</span></div>
+      </div>
+      <div class="card">
+        <h2>最新美容</h2>
+        <div class="row"><span>日期</span><b>2026/07/18</b></div>
+        <div class="row"><span>服務</span><b>美容</b></div>
+        <div class="row"><span>造型</span><b>身體 3mm、腳柱、耳罩</b></div>
+        <div class="row"><span>SPA</span><b>草本泥</b></div>
+        <div class="row"><span>美容表現</span><b>穩定乖巧</b></div>
+        <div class="note"><b>美容師提醒</b><br>屁股有些微泛紅，回家後請保持乾燥。</div>
+      </div>
+      <div class="card">
+        <h2>目前儲值餘額</h2>
+        <div class="stat">$27,400</div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+function showSection(id,btn){
+ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ if(btn){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+ }
+}
+function openPet(name){
+ document.getElementById('petName').textContent=name;
+ showSection('petDetail');
+}
+</script>
+</body>
+</html>
